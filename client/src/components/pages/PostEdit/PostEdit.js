@@ -1,18 +1,25 @@
 import PostForm from "../../features/PostForm/PostForm";
 import { useDispatch, useSelector } from 'react-redux';
-import { editPost, getPostById } from '../../../Redux/postsReducer.js';
+import { updatePostRequest, getPostById, clearRequests } from '../../../Redux/postsReducer.js';
 import { Navigate} from 'react-router-dom';
 import { useParams } from 'react-router';
+import { useEffect } from "react";
 
 const EditPage = () => {
+    const dispatch = useDispatch();
     const {id} = useParams(); 
-    console.log(id)
     const post = useSelector((state) => getPostById(state, id));
 
-    const dispatch = useDispatch();
-    const handleEditPost = (postData) => {
-        dispatch(editPost({...postData, id}));
+    useEffect(()=>{
+        console.log('clear')
+        dispatch(clearRequests());
+    }, [dispatch]);
+
+    const handleEditPost = async (postData) => {
+        await dispatch(updatePostRequest(id, postData));
+//        dispatch(editPost({...postData, id}));
     };
+
     const props = {
         ...post,
         header: 'Edit post',

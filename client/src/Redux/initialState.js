@@ -1,5 +1,6 @@
 const initialState = {
-    posts: [
+    posts: {
+        data:[
         {
             id: '1',
             title: 'Article title',
@@ -45,6 +46,8 @@ const initialState = {
             address: 'Poland',
         },
     ],
+    requests: {},
+    },
     users: [
         {
             id: '1',

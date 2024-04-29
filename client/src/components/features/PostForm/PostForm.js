@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Container, Button, Form, Image } from "react-bootstrap";
+import { Alert } from 'reactstrap';
 import { useNavigate } from "react-router";
 import { format } from "date-fns";
 
@@ -12,30 +13,37 @@ const PostForm = ({header, action, ...props}) => {
     const [title, setTitle] = useState(props.title ?? '');
     const [author, setAuthor] = useState(props.author ?? '');
     const [address, setAddress] = useState(props.address ?? '');
-    const [publishedDate, setPublishedDate] = useState(props.publishedDate ?? new Date());
+    const [publishedDate, _ ] = useState(props.publishedDate ?? new Date());
     const [content, setContent] = useState(props.content ?? '');
     const [price, setPrice] = useState(props.price ?? '');
-    const [imgPath, setImgPath] = useState(props.imgPath ?? '');
+    const [image, setImage] = useState(props.image ?? '');
 
+    const [isError, setIsError] = useState(false);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const props = {
+        const post = {
             title,
-            author,
-            publishedDate,
             content,
             price,
-            imgPath,
+            address,
+            image,
+            publishedDate,
         };
-        action(props);
-        navigate('/');
+    if (post.title && post.content && post.price && post.address && post.image){
+        await action(post);
+        setIsError(false);
+        navigate(`/post/${props._id}`);        // rerout to post view
+    } else {
+        setIsError(true);
+    }
     }
 
     return (
         <Container className="col-8">
             <h1 className="m-5">{header}</h1>
+            { (isError) && <Alert color="warning">There are some errors in you form. Have you fill all the fields? Maybe you forgot to choose your seat?</Alert> }
             <Form className="">
                 <div className="d-flex flex-column flex-md-row justify-content-between">
                     <div className="col-md-5">
@@ -45,7 +53,7 @@ const PostForm = ({header, action, ...props}) => {
                         </Form.Group>
                         <Form.Group className="mt-2">
                             <Form.Label>Author</Form.Label>
-                            <Form.Control type="text" value={author} onChange={(e) => setAuthor(e.target.value)}/>
+                            <span className="d-block px-2 py-1">{`${author.firstName} ${author.secondName}`}</span>
                         </Form.Group>
                         <Form.Group className="mt-2">
                             <Form.Label>Address</Form.Label>
@@ -64,9 +72,11 @@ const PostForm = ({header, action, ...props}) => {
                         </Form.Group>
                     </div>
                     <div className="d-flex col-md-6 row">
-                        <Image className="mt-2 mb-md-3 mb-md-0" src={`${process.env.PUBLIC_URL}/${imgPath}`} rounded />
+                        {image &&
+                            <Image className="mt-2 mb-md-3 mb-md-0" src={`${process.env.PUBLIC_URL}/${image}`} rounded /> }
                         <Form.Group className="mt-2">
-                            <Form.Control type="text" value={imgPath} onChange={(e) => setImgPath(e.target.value)}/>
+                            { !image && <Form.Label>Select picture:</Form.Label> }
+                            <Form.Control type="text" value={image} onChange={(e) => setImage(e.target.value)}/>
                         </Form.Group>  
                     </div>
                 </div>

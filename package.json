@@ -1,0 +1,17 @@
+{
+  "name": "my-news-app",
+  "version": "1.0.0",
+  "description": "Advartistment",
+  "main": "index.js",
+  "repository": "git@github.com:ufsowa/MyNewsApp.git",
+  "author": "Piotr Sowa <piotrsowa87@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.2"
+  }
+}

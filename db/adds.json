@@ -1,0 +1,37 @@
+[
+    {
+      "title": "Article title",
+      "content": "Main content of the article",
+      "publishedDate": "2024-02-01T23:00:00.000Z",
+      "author": "John Doe",
+      "image": "images/post-1.jpg",
+      "price": "34",
+      "address": "Poland"
+    },
+    {
+      "title": "Article title2",
+      "content": "Main content of the article",
+      "publishedDate": "2023-02-11T23:00:00.000Z",
+      "author": "John Doe",
+      "image": "images/post-1.jpg",
+      "price": "34",
+      "address": "Poland"
+    },
+    {
+      "title": "Article title3",
+      "content": "Main content of the article",
+      "publishedDate": "2024-11-30T23:00:00.000Z",
+      "author": "John Doe",
+      "image": "images/post-1.jpg",
+      "price": "34",
+      "address": "Poland"
+    },
+    {
+      "title": "Article title4",
+      "content": "Main content of the article",
+      "publishedDate": "2022-02-01T23:00:00.000Z",
+      "author": "John Doe",
+      "image": "images/post-1.jpg",
+      "price": "34",
+      "address": "Poland"
+    }]
