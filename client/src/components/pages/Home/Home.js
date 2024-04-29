@@ -4,27 +4,27 @@ import { Progress, Alert } from 'reactstrap';
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllPosts, getRequests, loadPostsRequest, clearRequests } from '../../../Redux/postsReducer.js';
+import { getAllPosts, loadPostsRequest, clearRequests } from '../../../Redux/postsReducer.js';
+
+import PostsList from '../../features/PostsList/PostsList.js';
 
 import styles from './Home.module.scss';
-
-import Post from '../../features/Post/Post.js';
 
 const Home = () => {
     const dispatch = useDispatch();
     const posts = useSelector(getAllPosts);
-    const requests = useSelector(getRequests);
 
     useEffect(()=>{
-        console.log('clear')
         dispatch(clearRequests());
         dispatch(loadPostsRequest())
     }, [dispatch]);
 
+    const searchPhrase = 'test';
+
     return (
         <>
             <div className="d-flex justify-content-between mb-5">
-                <h1>All news</h1>
+            <h1>All news</h1>
                 <Link to={'/post/add/'}  className="col-3 col-lg-2">
                     <Button className="w-100" variant="btn btn-outline-primary" >Add new</Button>
                 </Link>
@@ -38,17 +38,13 @@ const Home = () => {
                     placeholder="Looking for something?"
                     aria-label="Recipient's username with two button addons"
                     />
-                <Link to={"/post/add/"} >
+                <Link to={`/${searchPhrase}`} >
                     <Button variant="outline-secondary" className={styles.searchBtn}>Search</Button>
                 </Link>
             </InputGroup>
             </div>
             </div>
-            <Container className="d-flex justify-content-center row">
-                { (requests['LOAD_POSTS'] && requests['LOAD_POSTS'].success) && posts.map(post => <Post key={post._id} {...post} />)}
-                { (requests['LOAD_POSTS'] && requests['LOAD_POSTS'].pending) && <Progress animated color="primary" value={50} /> }
-                { (requests['LOAD_POSTS'] && requests['LOAD_POSTS'].error) && <Alert color="warning">Couldn't load posts...</Alert> }
-            </Container>
+            <PostsList posts={posts} />
         </>
     );
 }
