@@ -2,15 +2,16 @@ const express = require('express');
 const router = express.Router();
 
 const authMiddleware = require('../utils/authMiddleware');
-const Controller = require('../controllers/auth.controller');
+const imageUpload = require('../utils/imageUpload');
+const auth = require('../controllers/auth.controller');
 
-router.route('/register').post(Controller.register);
+router.route('/register').post(imageUpload.single('avatar'), auth.register);      // single is middleware to handle data and signle file | avatar indicate field with file
 
-router.route('/login').post(Controller.login);
+router.route('/login').post(auth.login);
 
-router.route('/logout').delete(authMiddleware, Controller.logout);
+router.route('/logout').delete(authMiddleware, auth.logout);
 
-router.route('/user').get(authMiddleware, Controller.getUser);
+router.route('/user').get(authMiddleware, auth.getUser);
 
 
 module.exports = router;

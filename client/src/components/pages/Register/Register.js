@@ -6,6 +6,8 @@ const Register = () => {
     const [login, setLogin ] = useState('');
     const [password, setPassword ] = useState('');
     const [phone, setPhone ] = useState('');
+    const [firstName, setFirstName ] = useState('');
+    const [secondName, setSecondName ] = useState('');
     const [avatar, setAvatar ] = useState(null);
     const [status, setStatus] = useState(null); //  null, 'loading', 'success', ' serverError', 'clientError', 'LoginError'
     
@@ -19,6 +21,8 @@ const Register = () => {
         fd.append('login', login);
         fd.append('password', password);
         fd.append('phone', phone);
+        fd.append('firstName', firstName);
+        fd.append('secondName', secondName);
         fd.append('avatar', avatar);
 
         const options = {
@@ -90,6 +94,16 @@ const Register = () => {
             <Form.Group className="mb-3" controlId="formPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formLogin">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control type="text" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Your name" />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formLogin">
+                <Form.Label>Second Name</Form.Label>
+                <Form.Control type="text" value={secondName} onChange={e => setSecondName(e.target.value)} placeholder="Your surname" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formPhone">

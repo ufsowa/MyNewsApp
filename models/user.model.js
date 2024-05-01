@@ -10,7 +10,7 @@
 
 const mongoose = require('mongoose');
 
-const seatSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     secondName: { type: String, required: true },
     login: { type: String, required: true },
@@ -19,4 +19,4 @@ const seatSchema = new mongoose.Schema({
     phone: { type: String, required: true },
 });
 
-module.exports = mongoose.model('User', seatSchema); 
+module.exports = mongoose.model('User', userSchema); 
