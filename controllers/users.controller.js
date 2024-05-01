@@ -1,8 +1,8 @@
-const Add = require('../models/add.model');
+const Seat = require('../models/User.model');
 
 exports.getAll = async (req, res) => {
     try {
-      res.json(await Add.find().populate('author'));
+      res.json(await Seat.find());
     }
     catch(err) {
       res.status(500).json({ message: err });
@@ -11,9 +11,9 @@ exports.getAll = async (req, res) => {
 
 exports.getRandom = async (req, res) => {
     try {
-      const count = await Add.countDocuments();  //  count all items in collection
+      const count = await Seat.countDocuments();  //  count all items in collection
       const rand = Math.floor(Math.random() * count);
-      const item = await Add.findOne().skip(rand);  //  skip number of items from the collection
+      const item = await Seat.findOne().skip(rand);  //  skip number of items from the collection
       if(!item) res.status(404).json({ message: 'Not found' });
       else res.json(item);
     }
@@ -24,7 +24,7 @@ exports.getRandom = async (req, res) => {
 
 exports.getById = async (req, res) => {
     try {
-      const item = await Add.findById(req.params.id).populate('author');   // no need ObjectId conversion, mongoose do it underneeth 
+      const item = await Seat.findById(req.params.id);   // no need ObjectId conversion, mongoose do it underneeth 
       if(!item) res.status(404).json({ message: 'Not found' });
       else res.json(item);
     }
@@ -35,19 +35,19 @@ exports.getById = async (req, res) => {
 
 exports.addItem = async (req, res) => {
     try {
-      const { title, address, price,  content, image, publishedDate } = req.body;
+      const { day, seat, client, email } = req.body;
 
-      // check if Add is already reserved
-      const isReserved = await Add.exists( { title } );
+      // check if seat is already reserved
+      const isReserved = await Seat.exists( { day, seat} );
       if(isReserved){
-        res.status(409).json({message: 'The title is already taken...'})
+        res.status(409).json({message: 'The slot is already taken...'})
       } else {
-        if( title && address && price && content && image && publishedDate) {
-          const newItem = new Add({ title, address, price, content, image, publishedDate, author: '662bd9bfbf8f4519683e57d2'});   // create item/document for model
+        if( day && seat && client && email) {
+          const newItem = new Seat({ day, seat, client, email });   // create item/document for model
           const addedItem = await newItem.save();                             // add item to the collection with the same model
-//        const adds = await Add.find();
+          const seats = await Seat.find();
           res.json(addedItem);
-//        req.io.emit('AddsUpdated', adds);
+          req.io.emit('seatsUpdated', seats);
         } else {
           res.status(400).json({message: 'Missing request data...'})
         }
@@ -58,12 +58,12 @@ exports.addItem = async (req, res) => {
 };
 
 exports.updateItem = async (req, res) => {
-    const { title, address, price, content, image } = req.body;
+    const { day, seat, client, email } = req.body;
     try {
-      const item = await Add.findById(req.params.id);   // check if item exist
+      const item = await Seat.findById(req.params.id);   // check if item exist
       if(item) {
-        await Add.updateOne({ _id: req.params.id }, { $set: { title, address, price, content, image }});
-        const item = await Add.findById(req.params.id).populate('author'); 
+        await Seat.updateOne({ _id: req.params.id }, { $set: { day, seat, client, email }});
+        const item = await Seat.findById(req.params.id); 
         res.json(item);
       }
       else res.status(404).json({ message: 'Not found...' });
@@ -75,9 +75,9 @@ exports.updateItem = async (req, res) => {
 
 exports.deleteItem = async (req, res) => {
     try {
-      const item = await Add.findById(req.params.id);
+      const item = await Seat.findById(req.params.id);
       if(item) {
-        await Add.deleteOne({ _id: req.params.id });
+        await Seat.deleteOne({ _id: req.params.id });
         //  await department.remove();    // another way to remove item
         res.json(item);
       }

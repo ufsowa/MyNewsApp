@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 const mongoose = require('mongoose');
 
@@ -16,20 +18,9 @@ const mongoose = require('mongoose');
 //     console.log('Successfully connected to the database');
 //     const db = client.db('companyDB');
 
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// import routes
-const addsRoutes = require('./routes/adds.routes');
-const usersRoutes = require('./routes/users.routes');
-
 // connects our backend code with the database
 mongoose.connect('mongodb://0.0.0.0:27017/LocalNews', { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
-
 db.once('open', () => {
   console.log('Connected to the database: ', db.name);
 });
@@ -40,9 +31,23 @@ db.on('error', err => console.log('Error ' + err));
     //   next();
     // });
 
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(session({ secret: 'xy456z', store: MongoStore.create(mongoose.connection), resave: false, saveUninitialized: false }));   //  encode session object and setup session store as mongo DB | add session object to req | add sessions - new collection - to DB
+
+// import routes
+const adsRoutes = require('./routes/ads.routes');
+const usersRoutes = require('./routes/users.routes');
+const authRoutes = require('./routes/auth.routes');
+
 // endpoints
-app.use('/api/adds', addsRoutes); // add route to server
-app.use('/api/users', usersRoutes); // add route to server
+app.use('/api/adds', adsRoutes); // add route to server
+app.use('/api/users', usersRoutes);
+app.use('/auth', authRoutes);
+
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Not found...' });

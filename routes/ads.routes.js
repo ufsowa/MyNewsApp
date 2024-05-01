@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const Controller = require('../controllers/add.controller');
+const Controller = require('../controllers/ads.controller');
 
 router.route('/').get(Controller.getAll);
 
