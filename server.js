@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-
 const mongoose = require('mongoose');
 
 // const employeesRoutes = require('./routes/employees.routes');
@@ -48,6 +48,7 @@ app.use('/api/adds', adsRoutes); // add route to server
 app.use('/api/users', usersRoutes);
 app.use('/auth', authRoutes);
 
+app.use(express.static(path.join(__dirname, '/public')));
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Not found...' });

@@ -7,6 +7,7 @@ import { getPostById, deletePostRequest, getRequests, getLastModified } from '..
 import { Container, Button, Image } from 'react-bootstrap';
 import CustomModal from '../../features/Modal/Modal.js';
 import { format } from "date-fns";
+import { IMGS_URL } from '../../../config';
 
 const PostDetail = () => {
     const { id } = useParams();
@@ -27,6 +28,8 @@ const PostDetail = () => {
         setModal(false);   
       };
 
+      console.log('Render view: ', postData);
+
     if(!postData && !addedPostId) return <Navigate to="/" />
     else if (!postData && addedPostId) return <Navigate to={`/post/${addedPostId}`} />
     else return (
@@ -35,10 +38,10 @@ const PostDetail = () => {
         { (requests['UPDATE_POSTS'] && requests['UPDATE_POSTS'].error) && <Alert color="danger">{requests['UPDATE_POSTS'].error}</Alert> }
         { (requests['UPDATE_POSTS'] && requests['UPDATE_POSTS'].success) && <Alert color="success">You've updated your add! Check you email to confirm!</Alert> }
         { (requests['UPDATE_POSTS'] && requests['UPDATE_POSTS'].pending) && <Progress animated className="mb-5" color="primary" value={75} /> }
-        <Image className="col-md-6 col-lg-5 mb-3 mb-md-0" src={`${process.env.PUBLIC_URL}/${postData.image}`} rounded />
+        <Image className="col-md-6 col-lg-5 mb-3 mb-md-0" src={`${IMGS_URL + postData.image}`} rounded />
         <div className="d-flex row col-md-6 col-lg-6">
             <h1 className="mb-4">{postData.title}</h1>
-            <h5> <b>Published: </b> {format(postData.publishedDate, "MMMM do, yyyy H:mma")}</h5>
+            {/* <h5> <b>Published: </b> {format(postData.publishedDate, "MMMM do, yyyy H:mma")}</h5> */}
             <h5> <b>Author: </b> {`${postData.author.firstName} ${postData.author.secondName}`}</h5>
             <h5> <b>Address: </b> {postData.address}</h5>
          

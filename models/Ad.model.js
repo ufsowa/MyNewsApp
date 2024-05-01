@@ -19,7 +19,7 @@ const seatSchema = new mongoose.Schema({
     address: { type: String, required: true },
     publishedDate: { type: String, required: true },
     price: { type: Number, required: true },
-    image: { type: String, required: true },    // how to store jpg file?
+    image: { type: String, required: true },    // multer middleware to handle formData/files. Keep only path to file here
 });
 
 module.exports = mongoose.model('Add', seatSchema); 

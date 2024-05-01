@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     secondName: { type: String, required: true },
     login: { type: String, required: true },
     password: { type: String, required: true },
-    avatar: { type: String, required: true },   // image?
+    avatar: { type: String, required: true },   // multer middleware to handle formData/files. Keep only path to file here
     phone: { type: String, required: true },
 });
 

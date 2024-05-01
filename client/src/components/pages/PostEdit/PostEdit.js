@@ -16,7 +16,17 @@ const EditPage = () => {
     }, [dispatch]);
 
     const handleEditPost = async (postData) => {
-        await dispatch(updatePostRequest(id, postData));
+        console.log('Send req:', postData);
+        const fd = new FormData();
+        fd.append('title', postData.title);
+        fd.append('author', postData.author);
+        fd.append('address', postData.address);
+        fd.append('publishedDate', postData.publishedDate);
+        fd.append('content', postData.content);
+        fd.append('price', postData.price);
+        fd.append('image', postData.image);
+
+        await dispatch(updatePostRequest(id, fd));
 //        dispatch(editPost({...postData, id}));
     };
 
