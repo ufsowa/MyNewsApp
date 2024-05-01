@@ -7,6 +7,7 @@ exports.register = async (req, res) => {
     try {
 
         const {login, password, firstName, secondName, phone, avatar} = req.body;
+        console.log('Register: ', req.body)
         if (login && typeof login === 'string' && password && typeof password === 'string') {
             const userWithLogin = await User.findOne({ login });
             if (userWithLogin) {

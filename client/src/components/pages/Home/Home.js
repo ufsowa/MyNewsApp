@@ -38,7 +38,7 @@ const Home = () => {
                     placeholder="Looking for something?"
                     aria-label="Recipient's username with two button addons"
                     />
-                <Link to={`/${searchPhrase}`} >
+                <Link to={`/search/${searchPhrase}`} >
                     <Button variant="outline-secondary" className={styles.searchBtn}>Search</Button>
                 </Link>
             </InputGroup>

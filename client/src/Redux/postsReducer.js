@@ -43,7 +43,7 @@ export const loadPostsRequest = () => {
   
       dispatch(startRequest({ name: 'LOAD_POSTS' }));
       try {
-        let res = await axios.get(`${API_URL}/adds`);
+        let res = await axios.get(`${API_URL}/api/adds`);
         console.log('Fech data: ', res);
         dispatch(loadPosts(res.data));
         dispatch(endRequest({ name: 'LOAD_POSTS' }));
@@ -58,7 +58,7 @@ export const updatePostRequest = (id, post) => {
   
       dispatch(startRequest({ name: 'UPDATE_POSTS' }));
       try {
-        let res = await axios.put(`${API_URL}/adds/${id}`, post);
+        let res = await axios.put(`${API_URL}/api/adds/${id}`, post);
         console.log('Updated data: ', res);
 
         dispatch(editPost(res.data));
@@ -74,7 +74,7 @@ export const addPostRequest = (post) => {
   
       dispatch(startRequest({ name: 'UPDATE_POSTS' }));
       try {
-        let res = await axios.post(`${API_URL}/adds`, post);
+        let res = await axios.post(`${API_URL}/api/adds`, post);
         console.log('Added data: ', res);
 
         dispatch(addPost(res.data));
@@ -90,7 +90,7 @@ export const deletePostRequest = (id) => {
   
       dispatch(startRequest({ name: 'UPDATE_POSTS' }));
       try {
-        let res = await axios.delete(`${API_URL}/adds/${id}`);
+        let res = await axios.delete(`${API_URL}/api/adds/${id}`);
         console.log('Removed data: ', res);
 
         dispatch(deletePostById(res.data));
