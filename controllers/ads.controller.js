@@ -77,7 +77,7 @@ exports.updateItem = async (req, res) => {
         await Ad.updateOne({ _id: req.params.id }, { $set: { title, address, price, content, image }});
         const addedItem = await Ad.findById(req.params.id).populate('author'); 
         image && console.log('Remove edited: ', path.join(__dirname, '..', 'public', 'uploads', item.image));   // remove only when file exist TODO
-        image && fs.unlinkSync(path.join(__dirname, '..', 'public', 'uploads', item.image));                                                         //  clear file from disk in case of error
+        image && fs.unlinkSync(path.join(__dirname, '..', 'public', 'uploads', item.image));                    //  clear file from disk in case of error
         res.json(addedItem);
       }
       else res.status(404).json({ message: 'Not found...' });
@@ -93,6 +93,7 @@ exports.deleteItem = async (req, res) => {
       if(item) {
         await Ad.deleteOne({ _id: req.params.id });
         //  await department.remove();    // another way to remove item
+        fs.unlinkSync(path.join(__dirname, '..', 'public', 'uploads', item.image));                 //  clear file from disk in case of error
         res.json(item);
       }
       else res.status(404).json({ message: 'Not found...' });
