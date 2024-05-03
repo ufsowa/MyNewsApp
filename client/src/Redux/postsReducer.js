@@ -5,6 +5,7 @@ import shortid from 'shortid';
 
 // selectors
 export const getAllPosts = ({ posts }) => posts.data;
+export const getSearchedPosts = ({ posts }) => posts.searched;
 export const getPostById = ({ posts }, id) => posts.data.find((post) => post._id === id);
 export const getRequests = ({ posts }) => posts.requests;
 export const getLastModified = ({ posts }) => posts.lastModified;
@@ -21,6 +22,7 @@ const ERROR_REQUEST = createActionName('ERROR_REQUEST');
 const CLEAR_REQUESTS = createActionName('CLEAR_REQUESTS');
 
 const LOAD_POSTS = createActionName('LOAD_POSTS');
+const LOAD_SEARCHED_POSTS = createActionName('SEARCH_POSTS');
 const DELETE = createActionName('DELETE');
 const ADD_POST = createActionName('ADD_POST');
 const EDIT_POST = createActionName('EDIT_POST');
@@ -32,6 +34,7 @@ export const errorRequest = payload => ({ payload, type: ERROR_REQUEST });
 export const clearRequests = payload => ({ payload, type: CLEAR_REQUESTS });
 
 export const loadPosts = payload => ({ payload, type: LOAD_POSTS });
+export const loadSearchedPosts = payload => ({ payload, type: LOAD_SEARCHED_POSTS });
 export const deletePostById = payload => ({type: DELETE, payload}); 
 export const addPost = payload => ({type: ADD_POST, payload}); 
 export const editPost = payload => ({type: EDIT_POST, payload}); 
@@ -51,6 +54,25 @@ export const loadPostsRequest = () => {
         dispatch(errorRequest({ name: 'LOAD_POSTS', error: e.message }));
       }
     };
+};
+
+export const searchPostsRequest = (searchPhrase) => {
+  return async dispatch => {
+
+    const options = {
+      searchPhrase
+    };
+
+    dispatch(startRequest({ name: 'LOAD_POSTS' }));
+    try {
+      let res = await axios.get(`${API_URL}/api/adds/search`, { params: options });
+      console.log('Searched data: ', res);
+      dispatch(loadSearchedPosts(res.data));
+      dispatch(endRequest({ name: 'LOAD_POSTS' }));
+    } catch(e) {
+      dispatch(errorRequest({ name: 'LOAD_POSTS', error: e.message }));
+    }
+  };
 };
 
 export const updatePostRequest = (id, post) => {
@@ -105,6 +127,8 @@ const postsReducer = (statePart = [], action) => {
     switch (action.type) {
         case LOAD_POSTS:
             return { ...statePart, data: [...action.payload], lastModified: '' };
+        case LOAD_SEARCHED_POSTS:
+              return { ...statePart, searched: [...action.payload]};  
         case EDIT_POST:
             return {...statePart, data: statePart.data.map(post => post._id === action.payload._id ? action.payload : post)};
         case ADD_POST:

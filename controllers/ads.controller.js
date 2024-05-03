@@ -1,4 +1,5 @@
 const Ad = require('../models/Ad.model');
+const { regexQuery } = require('../utils/dbExpressions');
 
 const fs = require('fs');
 const path = require('path');
@@ -10,6 +11,59 @@ exports.getAll = async (req, res) => {
     catch(err) {
       res.status(500).json({ message: err });
     }
+};
+
+exports.getSearch = async (req, res) => {
+  const querySearches = req.query.searchPhrase.split(' '); 
+  const queries = [
+    ...querySearches.map( searchText => regexQuery('title', searchText)),
+    ...querySearches.map( searchText => regexQuery('user', searchText)),
+    ...querySearches.map( searchText => regexQuery('content', searchText))
+  ];
+
+  console.log(queries)
+
+  try {
+    // res.json(await Ad.find({ $or: queries }).populate('author'));
+
+    // res.json(await Ad.aggregate([{ $lookup:
+    //                                 {
+    //                                   from: 'users',
+    //                                   localField: 'author',    // localField has type string 
+    //                                   foreignField: '_id',    // foreginField has type ObjectId - comparison wont work with string
+    //                                   as: 'user'
+    //                                 } 
+    //                               },
+    //                               {
+    //                                 $match: { $or: queries }
+    //                               }
+    //                             ])
+    //           );
+
+    const results = await Ad.aggregate([{ $lookup:
+      {
+        from: 'users',
+        let: { searchId: { $toObjectId: '$author' } },
+        pipeline: [
+          { $match: { $expr: { $eq: [ '$_id', '$$searchId' ] } } },
+          { $set: { name: { $concat: [ '$firstName', ' ', '$secondName' ] } } },
+        ],
+        as: 'author'
+      } 
+    },
+    {
+      $set: { user: { $first: '$author.name' }, author: { $first: '$author' } }
+    },
+    {
+      $match: { $or: queries }
+    }
+  ]);
+
+  res.json( results);
+  }
+  catch(err) {
+    res.status(500).json({ message: err });
+  }
 };
 
 exports.getRandom = async (req, res) => {

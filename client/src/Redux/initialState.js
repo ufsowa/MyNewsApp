@@ -46,6 +46,7 @@ const initialState = {
             address: 'Poland',
         },
     ],
+    searched: [],
     requests: {},
     },
     users: [

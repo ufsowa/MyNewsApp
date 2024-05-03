@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Button, InputGroup, Form } from 'react-bootstrap';
 import { Progress, Alert } from 'reactstrap';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllPosts, loadPostsRequest, clearRequests } from '../../../Redux/postsReducer.js';
 
@@ -13,13 +13,20 @@ import styles from './Home.module.scss';
 const Home = () => {
     const dispatch = useDispatch();
     const posts = useSelector(getAllPosts);
+    const [ searchPhrase, setSearchPhrase ] = useState('');
+
+    const navigate = useNavigate();
 
     useEffect(()=>{
         dispatch(clearRequests());
         dispatch(loadPostsRequest())
     }, [dispatch]);
 
-    const searchPhrase = 'test';
+    const handleSearch = (e) => {
+        e.preventDefault();
+        console.log('Search: ', searchPhrase);
+        navigate(`/search/${searchPhrase}`)
+    }
 
     return (
         <>
@@ -31,18 +38,19 @@ const Home = () => {
             </div>
             {/* Add error alert when add request failed */}
             <div className="d-flex justify-content-center">
-            <div className="col-11 col-md-7 mb-4">
-            <InputGroup >
-                    <Form.Control
-                    className="d-flex col-5"
-                    placeholder="Looking for something?"
-                    aria-label="Recipient's username with two button addons"
-                    />
-                <Link to={`/search/${searchPhrase}`} >
-                    <Button variant="outline-secondary" className={styles.searchBtn}>Search</Button>
-                </Link>
-            </InputGroup>
-            </div>
+                <div className="col-11 col-md-7 mb-4">
+                    <Form onSubmit={handleSearch}>
+                        <InputGroup>
+                            <Form.Control
+                                className="d-flex col-5"
+                                placeholder="Looking for something?"
+                                aria-label="Recipient's username with two button addons"
+                                value={searchPhrase} onChange={e => setSearchPhrase(e.target.value)}
+                            />
+                            <Button variant="outline-secondary" type="submit" className={styles.searchBtn}>Search</Button>
+                        </InputGroup>
+                    </Form>
+                </div>
             </div>
             <PostsList posts={posts} />
         </>

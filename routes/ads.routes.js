@@ -8,6 +8,8 @@ router.route('/').get(Controller.getAll);
 
 router.route('/random').get(Controller.getRandom);
 
+router.route('/search').get(Controller.getSearch);
+
 router.route('/:id').get(Controller.getById);
 
 router.route('/').post(imageUpload.single('image'), Controller.addItem);
