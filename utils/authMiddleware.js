@@ -2,7 +2,7 @@ const Session = require("../models/Session.model");
 
 const authMiddleware = async (req, res, next) => {
   const { login } = req.body;
-  console.log(req.session, login);
+  console.log("auth", req, req.session, login);
 
   if (process.env.NODE_ENV !== "production") {
     try {
