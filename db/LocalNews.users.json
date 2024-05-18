@@ -1,0 +1,11 @@
+[{
+  "_id": {
+    "$oid": "6646307e0e0c1c98397e03c7"
+  },
+  "firstName": "Luka",
+  "secondName": "Mobi",
+  "credentials": "6646307e0e0c1c98397e03c5",
+  "avatar": "phase-out-1715875966319.png",
+  "phone": "234566767",
+  "__v": 0
+}]

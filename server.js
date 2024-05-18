@@ -5,21 +5,21 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const mongoose = require('mongoose');
 
-// const employeesRoutes = require('./routes/employees.routes');
-// const departmentsRoutes = require('./routes/departments.routes');
-// const productsRoutes = require('./routes/products.routes');
-
-// mongoClient.connect('mongodb://127.0.0.1:27017', { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-//   console.log('Connect db')
-//   if (err){
-//     console.log(err);
-//   }
-//   else {
-//     console.log('Successfully connected to the database');
-//     const db = client.db('companyDB');
-
 // connects our backend code with the database
-mongoose.connect('mongodb://0.0.0.0:27017/LocalNews', { useNewUrlParser: true, useUnifiedTopology: true });
+const dbURI =
+  process.env.NODE_ENV === "production"
+    ? `mongodb+srv://${process.env.DB_PASS}@cluster0.dmtd0di.mongodb.net/LocalNews?retryWrites=true&w=majority&appName=Cluster0`
+    : "mongodb://localhost:27017/LocalNews";
+
+try {
+  mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+} catch (err) {
+  if (process.env.debug === true) console.log(err);
+  else console.log("Couldn't connect to db...");
+
+  console.log(err);
+}
+
 const db = mongoose.connection;
 db.once('open', () => {
   console.log('Connected to the database: ', db.name);
@@ -54,7 +54,13 @@ app.use('/api/adds', adsRoutes); // add route to server
 app.use('/api/users', usersRoutes);
 app.use('/auth', authRoutes);
 
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, "/client/build")));
 app.use(express.static(path.join(__dirname, '/public')));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/client/build/index.html"));
+});
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Not found...' });

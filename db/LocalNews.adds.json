@@ -1,0 +1,75 @@
+[{
+  "_id": {
+    "$oid": "662bd9a6bf8f4519683e57cc"
+  },
+  "title": "Article title",
+  "content": "Main content of the article",
+  "publishedDate": "2024-02-01T23:00:00.000Z",
+  "author": "6646307e0e0c1c98397e03c7",
+  "image": "img_c-1714590574918.jpg",
+  "price": 34,
+  "address": "kkk"
+},
+{
+  "_id": {
+    "$oid": "662bd9a6bf8f4519683e57ce"
+  },
+  "title": "Article title3",
+  "content": "Main content of the article",
+  "publishedDate": "2024-11-30T23:00:00.000Z",
+  "author": "6646307e0e0c1c98397e03c7",
+  "image": "img-1714588842970.jpg",
+  "price": 34,
+  "address": "Poland"
+},
+{
+  "_id": {
+    "$oid": "662bd9a6bf8f4519683e57cf"
+  },
+  "title": "Article title4",
+  "content": "Main content of the article",
+  "publishedDate": "2022-02-01T23:00:00.000Z",
+  "author": "6646307e0e0c1c98397e03c7",
+  "image": "img_2-1714589031834.jpg",
+  "price": 34,
+  "address": "Poland"
+},
+{
+  "_id": {
+    "$oid": "66327bfd91f2af88f5946fd4"
+  },
+  "title": "new title",
+  "content": "435dgdfgfdgdfggfgdg",
+  "author": "6646307e0e0c1c98397e03c7",
+  "address": "tretert",
+  "price": 143,
+  "image": "img_a-1714584573704.jpg",
+  "__v": 0,
+  "publishedDate": "Sat May 18 2024 21:15:34 GMT+0200 (Central European Summer Time)"
+},
+{
+  "_id": {
+    "$oid": "6648e9d243138b73f6b75422"
+  },
+  "title": "hiunday",
+  "content": "Selling brand new bronsolete for test",
+  "author": "6646307e0e0c1c98397e03c7",
+  "address": "sezamkowa 3",
+  "price": 1232,
+  "image": "img_b-1716054482927.jpg",
+  "__v": 0,
+  "publishedDate": "Sat May 18 2024 21:12:18 GMT+0200 (Central European Summer Time)"
+},
+{
+  "_id": {
+    "$oid": "6648fb8c1afd0d8d2990a946"
+  },
+  "title": "hunday",
+  "content": "test cover",
+  "author": "6646307e0e0c1c98397e03c7",
+  "address": "gogog",
+  "publishedDate": "Sat May 18 2024 21:03:17 GMT+0200 (Central European Summer Time)",
+  "price": 1232,
+  "image": "img_x-1716061355548.jpg",
+  "__v": 0
+}]
