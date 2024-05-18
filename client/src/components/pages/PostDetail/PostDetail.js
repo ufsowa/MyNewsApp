@@ -4,6 +4,7 @@ import { Alert, Progress } from 'reactstrap';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPostById, deletePostRequest, getRequests, getLastModified } from '../../../Redux/postsReducer.js';
+import { getLoggedUser } from '../../../Redux/usersReducer.js';
 import { Container, Button, Image } from 'react-bootstrap';
 import CustomModal from '../../features/Modal/Modal.js';
 import { format } from "date-fns";
@@ -15,6 +16,8 @@ const PostDetail = () => {
     const postData = useSelector((state) => getPostById(state, id));
     const addedPostId = useSelector(getLastModified)
     const requests = useSelector(getRequests);
+    const loggedUser = useSelector(getLoggedUser)
+
 
     const [modal, setModal] = useState(false);
 
@@ -41,7 +44,7 @@ const PostDetail = () => {
         <Image className="col-md-6 col-lg-5 mb-3 mb-md-0" src={`${IMGS_URL + postData.image}`} rounded />
         <div className="d-flex row col-md-6 col-lg-6">
             <h1 className="mb-4">{postData.title}</h1>
-            {/* <h5> <b>Published: </b> {format(postData.publishedDate, "MMMM do, yyyy H:mma")}</h5> */}
+            <h5> <b>Published: </b> {format(postData.publishedDate, "MMMM do, yyyy H:mma")}</h5>
             <h5> <b>Author: </b> {`${postData.author.firstName} ${postData.author.secondName}`}</h5>
             <h5> <b>Address: </b> {postData.address}</h5>
          
@@ -52,14 +55,16 @@ const PostDetail = () => {
         </article>
         </Container>
         <div className="mt-3 d-flex justify-content-center">
-        <div className="d-flex col-6 gap-2 justify-content-center"> 
-            <Link to={"/post/edit/" + id} className="col-5">
-                <Button className="w-100" variant="btn btn-outline-primary">Edit</Button>
-            </Link>
-            <Link onClick={showModal}  className="col-5">
-                <Button className="w-100" variant="btn btn-outline-danger" >Delete</Button>
-            </Link>
-        </div>
+        { loggedUser && (loggedUser._id === postData.author._id) &&
+            <div className="d-flex col-6 gap-2 justify-content-center"> 
+                <Link to={"/post/edit/" + id} className="col-5">
+                    <Button className="w-100" variant="btn btn-outline-primary">Edit</Button>
+                </Link>
+                <Link onClick={showModal}  className="col-5">
+                    <Button className="w-100" variant="btn btn-outline-danger" >Delete</Button>
+                </Link>
+            </div>
+        }
         </div>
       
         <CustomModal modalStatus={modal} closeModal={setModal} action={removePost}/>

@@ -1,4 +1,5 @@
 const User = require('../models/User.model');
+const Credential = require('../models/Credential.model');
 const Session = require('../models/Session.model');
 
 const bcrypt = require('bcryptjs');
@@ -16,20 +17,23 @@ exports.register = async (req, res) => {
         if (login && typeof login === 'string' && password && typeof password === 'string'
             && req.file && ['image/png', 'image/jpeg', 'image/gif'].includes(fileType)) {
 
-            const userWithLogin = await User.findOne({ login });
+            const userWithLogin = await Credential.findOne({ login });
             if (userWithLogin) {
                 fs.unlinkSync(filePath)                                                         //  clear file from disk in case of error
                 return res.status(409).send({message: 'User with this login already exists'})
             }
 
-            const user = await User.create({ login, password: await bcrypt.hash(password,10), firstName, secondName, phone, avatar: req.file.filename});
-            res.status(201).send({ message: 'User created ' + user.login })
+            const userCredentials = await Credential.create({ login, password: await bcrypt.hash(password,10)});
+            const user = await User.create({ firstName, secondName, phone, avatar: req.file.filename, credentials: userCredentials._id});
+            await Credential.updateOne({ _id: userCredentials._id }, { $set: { user: user._id }});
+            res.status(201).send({ message: 'Account created for ' + userCredentials.login })
         } else {
             fs.unlinkSync(filePath)
             res.status(400).send({ message: 'Bad request' });
         }
 
     } catch (err) {
+        fs.unlinkSync(filePath)                                     
         res.status(500).send({message: err.message});
     }
 
@@ -41,14 +45,16 @@ exports.login = async (req, res) => {
         const { login, password } = req.body;
 
         if (login && typeof login === 'string' && password && typeof password === 'string') {
-            const user = await User.findOne({ login });
+            const userCredentials = await Credential.findOne({ login });
 
-            if (!user) {
+            if (!userCredentials) {
                 res.status(400).send({ message: 'Login or password are incorrect'});
             } else {
-                if (bcrypt.compareSync(password, user.password)) {
-                    req.session.user = { login: user.login, id: user._id };     // add login to session
-                    res.status(200).send({ message: 'Login successful' });
+                if (bcrypt.compareSync(password, userCredentials.password)) {
+                    req.session.user = { login: userCredentials.login, id: userCredentials.user };     // add login to session
+                        const item = await User.findById(userCredentials.user);
+                        if(!item) res.status(404).json({ message: 'Not found' });
+                        else res.status(200).json({ login: userCredentials.login, user: item });
                 }
                 else {
                     res.status(400).send({ message: 'Login or password are incorrect' });
@@ -77,8 +83,20 @@ exports.logout = async (req, res) => {
 }
 
 exports.getUser = async (req, res) => {
+    // res.json({ 
+    //     message: 'User logged in!',
+    //     login: req.session.user.login,
+    //     id: req.session.user.id,
+    //  });
 
-    res.send({ message: 'Yeah, I\'m logged!' });
+     try {
+        const item = await User.findById(req.session.user.id);
+        if(!item) res.status(404).json({ message: 'Not found' });
+        else res.json({ login: req.session.user.login, user: item });
+      }
+      catch(err) {
+        res.status(500).json({ message: err });
+      }
 
     // if (req.session.login) {                        // check if login is in session
     //     res.status(200).send({ login: req.session.login });

@@ -5,7 +5,7 @@ import { Progress, Alert } from 'reactstrap';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllPosts, loadPostsRequest, clearRequests } from '../../../Redux/postsReducer.js';
-
+import { getLoggedUser } from '../../../Redux/usersReducer'; 
 import PostsList from '../../features/PostsList/PostsList.js';
 
 import styles from './Home.module.scss';
@@ -14,7 +14,7 @@ const Home = () => {
     const dispatch = useDispatch();
     const posts = useSelector(getAllPosts);
     const [ searchPhrase, setSearchPhrase ] = useState('');
-
+    const loggedUser = useSelector(getLoggedUser);
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -24,7 +24,6 @@ const Home = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        console.log('Search: ', searchPhrase);
         navigate(`/search/${searchPhrase}`)
     }
 
@@ -32,9 +31,10 @@ const Home = () => {
         <>
             <div className="d-flex justify-content-between mb-5">
             <h1>All news</h1>
-                <Link to={'/post/add/'}  className="col-3 col-lg-2">
-                    <Button className="w-100" variant="btn btn-outline-primary" >Add new</Button>
-                </Link>
+            
+            {loggedUser && <Link to={'/post/add/'}  className="col-3 col-lg-2">
+                <Button className="w-100" variant="btn btn-outline-primary" >Add new</Button>
+            </Link>}
             </div>
             {/* Add error alert when add request failed */}
             <div className="d-flex justify-content-center">

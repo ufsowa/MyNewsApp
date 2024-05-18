@@ -16,6 +16,7 @@ const EditPage = () => {
     }, [dispatch]);
 
     const handleEditPost = async (postData) => {
+        dispatch(clearRequests());
         console.log('Send req:', postData);
         const fd = new FormData();
         fd.append('title', postData.title);

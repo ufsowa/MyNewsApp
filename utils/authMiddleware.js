@@ -28,6 +28,7 @@ const authMiddleware = async (req, res, next) => {
       next();
     }
     catch (err) {
+      console.error(err)
       return res.status(401).send({ message: 'You are not authorized' });
     }
 

@@ -93,9 +93,12 @@ exports.getById = async (req, res) => {
 exports.addItem = async (req, res) => {
     console.log('Add: ', req.body, req.file);
 
+    const image = req.file.filename;
+    const filePath = req.file.path;
+
     try {
-      const { title, address, price,  content, publishedDate } = req.body;
-      const image = req.file.filename;
+      const { title, address, price,  content, publishedDate, author } = req.body;
+      
 
       // check if Ad is already reserved
       const isReserved = await Ad.exists( { title } );
@@ -104,7 +107,7 @@ exports.addItem = async (req, res) => {
         res.status(409).json({message: 'The title is already taken...'})
       } else {
         if( title && address && price && content && image && publishedDate) {
-          const newItem = new Ad({ title, address, price, content, image, publishedDate, author: '662bd9bfbf8f4519683e57d2'});   // create item/document for model
+          const newItem = new Ad({ title, address, price, content, image, publishedDate, author});   // create item/document for model
           const addedItem = await newItem.save();                             // Ad item to the collection with the same model
 //        const Ads = await Ad.find();
           res.json(addedItem);
@@ -115,28 +118,33 @@ exports.addItem = async (req, res) => {
         }
       }
     } catch(err) {
+      fs.unlinkSync(filePath);
       res.status(500).json({ message: err });
     }
 };
 
 exports.updateItem = async (req, res) => {
     console.log('Edit: ', req.body, req.file);
+    const filePath = req.file ? req.file.path : undefined;
 
     try {
-      const { title, address, price, content} = req.body;
+      const { title, address, price, content, publishedDate} = req.body;
       const image = req.file ? req.file.filename : undefined;
   
       const item = await Ad.findById(req.params.id);   // check if item exist
       if(item) {
-        await Ad.updateOne({ _id: req.params.id }, { $set: { title, address, price, content, image }});
+        await Ad.updateOne({ _id: req.params.id }, { $set: { title, address, price, content, image, publishedDate }});
         const addedItem = await Ad.findById(req.params.id).populate('author'); 
         image && console.log('Remove edited: ', path.join(__dirname, '..', 'public', 'uploads', item.image));   // remove only when file exist TODO
         image && fs.unlinkSync(path.join(__dirname, '..', 'public', 'uploads', item.image));                    //  clear file from disk in case of error
         res.json(addedItem);
+      } else {
+        filePath && fs.unlinkSync(filePath);                                                         //  clear file from disk in case of error
+        res.status(404).json({ message: 'Not found...' });
       }
-      else res.status(404).json({ message: 'Not found...' });
-    }
+  }
     catch(err) {
+      filePath && fs.unlinkSync(filePath);                                                      //  clear file from disk in case of error
       res.status(500).json({ message: err });
     } 
 };

@@ -1,6 +1,10 @@
 import './App.css';
-import { Container } from 'react-bootstrap'
+import { useEffect } from 'react';
+import { Container } from 'react-bootstrap';
 import { Routes, Route } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logIn } from './Redux/usersReducer';
+import { API_URL } from './config';
 
 import Header from './components/views/Header/Header.js';
 import Footer from './components/views/Footer/Footer.js';
@@ -16,6 +20,38 @@ import NotFound from './components/pages/NotFound/NotFound.js';
 
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(()=> {
+    
+    const options = {
+        method: 'GET',
+   //     credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    };
+
+    fetch(`${API_URL}/auth/user`, options)
+    .then(res => {
+      console.log(res);
+        if (res.status === 200) {
+          return res;
+        } else {
+          return null;
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('session login ', data);
+      data.login && dispatch(logIn(data.user));
+
+    })
+    .catch(err => {
+      console.log('no user logged in')
+    })
+  }, [dispatch]);
+  
   return (
     <Container>
       <Header />

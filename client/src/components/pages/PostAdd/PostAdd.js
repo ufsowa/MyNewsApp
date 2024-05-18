@@ -1,15 +1,19 @@
-import PostForm from "../../features/PostForm/PostForm";
-import { useDispatch } from 'react-redux';
-import { addPostRequest, clearRequests } from '../../../Redux/postsReducer.js';
+import PostForm from '../../features/PostForm/PostForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPostRequest, clearRequests } from '../../../Redux/postsReducer';
+import { getLoggedUser } from '../../../Redux/usersReducer';
 
 import { useEffect } from "react";
 
 const EditPage = () => {
     const dispatch = useDispatch();
+    const loggedUser = useSelector(getLoggedUser);
 
     useEffect(()=>{
         console.log('clear')
         dispatch(clearRequests());
+  
+  
     }, [dispatch]);
 
     const handleAddPost = async (postData) => {
@@ -28,6 +32,7 @@ const EditPage = () => {
     };
 
     const props = {
+        author: loggedUser,
         header: 'Add new post',
         action: handleAddPost,
     };

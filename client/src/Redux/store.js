@@ -9,7 +9,7 @@ import usersReducer from './usersReducer.js';
 
 const subreducers = {
     posts: postsReducer,
-    users: usersReducer,
+    user: usersReducer,
 }
 
 const reducer = combineReducers(subreducers);

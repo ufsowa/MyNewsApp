@@ -54,37 +54,37 @@ const Register = () => {
 
             <h1 className="my-4">Sign up</h1>
 
-{/* {status === 'success && */}
-            <Alert variant="success">
-              <Alert.Heading>Success!</Alert.Heading>
-                <p>You have been successfully registered! Yo can now log in...</p>
-            </Alert>
-{/* } */}
+            {status === 'success' &&
+                        <Alert variant="success">
+                        <Alert.Heading>Success!</Alert.Heading>
+                            <p>You have been successfully registered! Yo can now log in...</p>
+                        </Alert>
+            }
 
-{/* {status === 'serverError && */}
-            <Alert variant="danger">
-              <Alert.Heading>Something went wrong...</Alert.Heading>
-                <p>Unexpected error... Try again!</p>
-            </Alert>
-{/* } */}
-{/* {status === 'clientError && */}
-            <Alert variant="danger">
-              <Alert.Heading>No enough data</Alert.Heading>
-                <p>Please fill all the fields!</p>
-            </Alert>
-{/* } */}
-{/* {status === 'loginError && */}
-            <Alert variant="warning">
-              <Alert.Heading>Login already in use</Alert.Heading>
-                <p>Please use other login!</p>
-            </Alert>
-{/* } */}
+            {status === 'serverError' &&
+                        <Alert variant="danger">
+                        <Alert.Heading>Something went wrong...</Alert.Heading>
+                            <p>Unexpected error... Try again!</p>
+                        </Alert>
+            }
+            {status === 'clientError' &&
+                        <Alert variant="danger">
+                        <Alert.Heading>No enough data</Alert.Heading>
+                            <p>Please fill all the fields!</p>
+                        </Alert>
+            }
+            {status === 'loginError' &&
+                        <Alert variant="warning">
+                        <Alert.Heading>Login already in use</Alert.Heading>
+                            <p>Please use other login!</p>
+                        </Alert>
+            }
 
-{/* {status === 'clientError && */}
-            <Spinner animation="border" role="status" className="d-block mx-auto">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>
-{/* } */}
+            {status === 'clientError' &&
+                        <Spinner animation="border" role="status" className="d-block mx-auto">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+            }
 
             <Form.Group className="mb-3" controlId="formLogin">
                 <Form.Label>Login</Form.Label>

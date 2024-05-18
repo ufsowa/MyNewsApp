@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { Container, Button, Form, Image } from "react-bootstrap";
-import { Alert } from 'reactstrap';
+import { Alert, Progress } from 'reactstrap';
 import { useNavigate } from "react-router";
 import { format } from "date-fns";
 import { IMGS_URL } from '../../../config';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRequests, clearRequests } from '../../../Redux/postsReducer.js';
+
 
 // import ReactQuill from 'react-quill';
 // import 'react-quill/dist/quill.snow.css';
@@ -20,14 +23,16 @@ const PostForm = ({header, action, ...props}) => {
     const [image, setImage] = useState(props.image ?? null);
     const [selectedFile, setSelectedFile] = useState(null);
 
-
     const [isError, setIsError] = useState(false);
+    const requests = useSelector(getRequests);
+
     const [preview, setPreview] = useState()
 
     const navigate = useNavigate();
 
     // create a preview as a side effect, whenever selected file is changed
     useEffect(() => {
+        console.log('date |', publishedDate, '|');
         if (!selectedFile) {
             setPreview(undefined)
             return
@@ -38,7 +43,16 @@ const PostForm = ({header, action, ...props}) => {
 
         // free memory when ever this component is unmounted
         return () => URL.revokeObjectURL(objectUrl)
-    }, [selectedFile])
+    }, [selectedFile]);
+
+    useEffect(()=>{
+        console.log('reroute on success ', requests);
+        if (requests['UPDATE_POSTS'] && requests['UPDATE_POSTS'].success) { 
+            console.log('reroute on success');
+            navigate(`/post/${props._id}`);        // rerout to post view
+        }
+    },
+    [requests])
 
     const onSelectFile = e => {
         if (!e.target.files || e.target.files.length === 0) {
@@ -57,14 +71,14 @@ const PostForm = ({header, action, ...props}) => {
             content,
             price,
             address,
-            author: 'logged User',
+            author: author._id,
             image: selectedFile,
-            publishedDate: format(publishedDate, "MMMM do, yyyy H:mma"),
+            publishedDate,
         };
         if (post.title && post.content && post.price && post.address && (image || post.image)) {
             await action(post);
+            console.log('update on success', requests);
             setIsError(false);
-        //  navigate(`/post/${props._id}`);        // rerout to post view
         } else {
             setIsError(true);
         }
@@ -74,7 +88,9 @@ const PostForm = ({header, action, ...props}) => {
         <Container className="col-8">
             <h1 className="m-5">{header}</h1>
             { (isError) && <Alert color="warning">There are some errors in you form. Have you fill all the fields? Maybe you forgot to choose your seat?</Alert> }
-
+            { (requests['UPDATE_POSTS'] && requests['UPDATE_POSTS'].error) && <Alert color="danger">{requests['UPDATE_POSTS'].error}</Alert> }
+            { (requests['UPDATE_POSTS'] && requests['UPDATE_POSTS'].pending) && <Progress animated className="mb-5" color="primary" value={75} /> }
+  
             <Form className="">
                 <div className="d-flex flex-column flex-md-row justify-content-between">
                     <div className="col-md-5">
@@ -96,7 +112,7 @@ const PostForm = ({header, action, ...props}) => {
 
                         <Form.Group className="mt-2">
                             <Form.Label>Published</Form.Label>
-                            <span className="d-block px-2 py-1">{format(publishedDate, "MMMM do, yyyy H:mma")}</span>
+                            <span className="d-block px-2 py-1">{format(publishedDate, "MMMM, yyyy H:mma")}</span>
                             {/* <DatePicker wrapperClassName="d-block" className="px-2 py-1" selected={publishedDate} onChange={(date) => setPublishedDate(date)} /> */}
                         </Form.Group>
 

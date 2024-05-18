@@ -1,30 +1,26 @@
 import shortid from 'shortid';
 
 // selectors
-export const getAllPosts = ({users}) => users;
-export const getPostById = ({users}, id) => users.find((user) => user.id === id);
+export const getLoggedUser = ({user}) => user ? user : null;
 
 // actions
-const createActionName = actionName => `app/posts/${actionName}`;
-const DELETE_USER = createActionName('DELETE_USER');
-const ADD_USER = createActionName('ADD_USER');
-const EDIT_USER = createActionName('EDIT_USER');
-// action creators
-export const deleteUserById = payload => ({type: DELETE_USER, payload}); 
-export const addUser = payload => ({type: ADD_USER, payload}); 
-export const editUser = payload => ({type: EDIT_USER, payload}); 
+const createActionName = actionName => `app/users/${actionName}`;
+const LOG_IN = createActionName('LOG_IN');
+const LOG_OUT = createActionName('LOG_OUT');
 
-const postsReducer = (statePart = [], action) => {
+// action creators
+export const logIn = payload => ({type: LOG_IN, payload}); 
+export const logOut = payload => ({type: LOG_OUT, payload}); 
+
+const usersReducer = (statePart = [], action) => {
     switch (action.type) {
-        case EDIT_USER:
-            return statePart.map(user => user.id === action.payload.id ? action.payload : user);
-        case ADD_USER:
-            return [...statePart, {...action.payload, id: shortid()}];
-        case DELETE_USER:
-            return statePart.filter(user => user.id !== action.payload);
+        case LOG_IN:
+            return action.payload;
+        case LOG_OUT:
+            return null;    
         default:
             return statePart;
     };
 };
 
-export default postsReducer;
+export default usersReducer;

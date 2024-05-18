@@ -49,26 +49,7 @@ const initialState = {
     searched: [],
     requests: {},
     },
-    users: [
-        {
-            id: '1',
-            firstName: 'John',
-            secondName: 'Doe',
-            login: 'funnkyBoy',
-            password: 'pass',
-            avatar: 'pathToPicture.jpg',
-            phone: '123456',
-        },
-        {
-            id: '2',
-            firstName: 'Leon',
-            secondName: 'Monte',
-            login: 'leeMon',
-            password: 'pass',
-            avatar: 'pathToPicture.jpg',
-            phone: '123456',
-        }
-    ]
+    user: null,
 };
 
 export default initialState;
