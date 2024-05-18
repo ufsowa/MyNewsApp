@@ -33,7 +33,13 @@ db.on('error', err => console.log('Error ' + err));
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000',//(https://your-client-app.com)
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(session({ secret: 'xy456z', store: MongoStore.create(mongoose.connection), resave: false, saveUninitialized: false }));   //  encode session object and setup session store as mongo DB | add session object to req | add sessions - new collection - to DB

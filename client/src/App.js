@@ -26,7 +26,7 @@ function App() {
     
     const options = {
         method: 'GET',
-   //     credentials: 'include',
+        credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
         },
