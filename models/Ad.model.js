@@ -10,16 +10,16 @@
 //     address: 'Poland',
 // },
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const seatSchema = new mongoose.Schema({
     title: { type: String, required: true },
     content: { type: String, required: true, minlength: 5, maxlength: 200 },
-    author: { type: String, required: true, ref: 'User' },   // dependency to User, keep User ID and use .populate('department'); to inject data
+    author: { type: String, required: true, ref: "User" }, // dependency to User, keep User ID and use .populate('department'); to inject data
     address: { type: String, required: true },
     publishedDate: { type: String, required: true },
     price: { type: Number, required: true },
-    image: { type: String, required: true },    // multer middleware to handle formData/files. Keep only path to file here
+    image: { type: String, required: true }, // multer middleware to handle formData/files. Keep only path to file here
 });
 
-module.exports = mongoose.model('Add', seatSchema); 
+module.exports = mongoose.model("Ad", seatSchema);
