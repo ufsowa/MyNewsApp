@@ -1,8 +1,7 @@
 const Session = require("../models/Session.model");
 
 const authMiddleware = async (req, res, next) => {
-  const { login } = req.body;
-  console.log("auth", req.body, req.session, login);
+  console.log("auth", req.body, req.session);
 
   if (process.env.NODE_ENV !== "production") {
     try {
@@ -30,8 +29,8 @@ const authMiddleware = async (req, res, next) => {
   } else {
     console.log("production");
 
-    if (req.session.user && req.session.user.login === login) {
-      // check if login is in session
+    if (req.session.user && req.session.user.login) {
+      // check if login is logged in session
       next(); // move to next
     } else {
       res.status(401).send({ message: "You are not authorized" });

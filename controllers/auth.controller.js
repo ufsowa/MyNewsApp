@@ -91,7 +91,7 @@ exports.getUser = async (req, res) => {
 
      try {
         const item = await User.findById(req.session.user.id);
-        if(!item) res.status(404).json({ message: 'Not found' });
+        if(!item) res.status(404).json({ message: 'No logged user' });
         else res.json({ login: req.session.user.login, user: item });
       }
       catch(err) {
