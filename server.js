@@ -63,9 +63,12 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const sessionSecret =
+  process.env.NODE_ENV === "production" ? process.env.SESSION_SECRET : "xy456z";
 app.use(
   session({
-    secret: "xy456z",
+    secret: sessionSecret,
     store: MongoStore.create(mongoose.connection),
     resave: false,
     saveUninitialized: false,
